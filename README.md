@@ -8,4 +8,4 @@ Personal finance web app for Brazilian users. Track income and expenses across b
 ## Documentation
 
 - [`SPEC.md`](./SPEC.md) — product specification (what the system does)
-- `ARCHITECTURE.md` — technical architecture and stack decisions _(coming soon)_
+- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — technical architecture and stack decisions
