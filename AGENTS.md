@@ -7,7 +7,7 @@ Caramelo is a personal finance web app for Brazilian users to track income and e
 - Check [`SPEC.md`](./SPEC.md) to understand what Caramelo does.
 - Check [`ARCHITECTURE.md`](./ARCHITECTURE.md) to understand how Caramelo is built.
 
-When a change affects any of these documents, update them in the same PR as the code that changes it.
+**IMPORTANT:** When a change affects any of these documents, update them in the same PR as the code that changes it. If you notice that `SPEC.md` or `ARCHITECTURE.md` no longer matches the codebase, update the doc proactively — do not wait to be asked.
 
 ## General rules
 

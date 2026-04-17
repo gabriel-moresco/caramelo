@@ -1,0 +1,19 @@
+{
+  "name": "@caramelo/email",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@caramelo/eslint-config": "workspace:*",
+    "@caramelo/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "typescript": "6.0.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@caramelo/eslint-config/base.js"
+    ]
+  },
+  "prettier": "@caramelo/eslint-config/prettier.config.js"
+}

@@ -52,10 +52,11 @@ caramelo/
 │   ├── app/                      # TanStack Router + Vite SPA
 │   └── api/                      # Hono + tRPC backend
 ├── packages/
-│   ├── db/                       # Drizzle schema, migrations, client factory
 │   ├── auth/                     # Better Auth configuration
+│   ├── db/                       # Drizzle schema, migrations, client factory
 │   ├── email/                    # Resend client + pt-BR email templates
 │   ├── eslint-config/            # Shared ESLint + Prettier config
+│   ├── shared/                   # Common code shared across packages (types, utils, constants)
 │   └── typescript-config/        # Shared tsconfig base files
 ├── pnpm-workspace.yaml
 ├── package.json

@@ -1,0 +1,12 @@
+{
+  "name": "@caramelo/typescript-config",
+  "devDependencies": {
+    "@caramelo/eslint-config": "workspace:*"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@caramelo/eslint-config/base.js"
+    ]
+  },
+  "prettier": "@caramelo/eslint-config/prettier.config.js"
+}

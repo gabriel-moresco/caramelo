@@ -1,0 +1,29 @@
+{
+  "name": "caramelo",
+  "scripts": {
+    "app": "pnpm --dir apps/app",
+    "api": "pnpm --dir apps/api",
+    "auth": "pnpm --dir packages/auth",
+    "db": "pnpm --dir packages/db",
+    "email": "pnpm --dir packages/email",
+    "eslint-config": "pnpm --dir packages/eslint-config",
+    "shared": "pnpm --dir packages/shared",
+    "typescript-config": "pnpm --dir packages/typescript-config",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "eslint . --fix && prettier . --write",
+    "clear": "./scripts/clear-project.sh"
+  },
+  "dependencies": {
+    "typescript": "6.0.3"
+  },
+  "packageManager": "pnpm@9.15.6",
+  "engines": {
+    "node": "22.x"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./packages/eslint-config/base.js"
+    ]
+  },
+  "prettier": "./packages/eslint-config/prettier.config.js"
+}
