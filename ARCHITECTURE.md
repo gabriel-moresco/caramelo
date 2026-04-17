@@ -74,13 +74,14 @@ caramelo/
 
 ### Why no Turborepo
 
-v1 has two apps and five small packages. Turborepo's caching and pipeline orchestration add complexity we don't need at this size. If build times become painful, revisit.
+v1 has two apps and six small packages. Turborepo's caching and pipeline orchestration add complexity we don't need at this size. If build times become painful, revisit.
 
 ---
 
 ## 3. Frontend — `apps/app`
 
 **Stack:**
+
 - [TanStack Router](https://tanstack.com/router) (file-based routing)
 - [Vite](https://vitejs.dev/) (build tool)
 - React 19
@@ -127,6 +128,7 @@ Component-level queries via `useQuery` / `useMutation` from the tRPC hook layer.
 ## 4. Backend — `apps/api`
 
 **Stack:**
+
 - [Hono](https://hono.dev/) (HTTP framework)
 - [tRPC](https://trpc.io/) (typed procedures)
 - [Better Auth](https://better-auth.com/) (sessions, password flows)
@@ -145,13 +147,13 @@ Deployed to Vercel as a separate project using Hono's Vercel adapter. The entire
 
 Hono owns the request/response lifecycle. It mounts:
 
-| Path prefix | Handler |
-|---|---|
-| `/trpc/*` | tRPC HTTP handler (mounted as a Hono sub-router) |
-| `/auth/*` | Better Auth HTTP handler |
-| `/import/ofx` | Plain Hono route — OFX file upload (multipart/form-data) |
+| Path prefix         | Handler                                                      |
+| ------------------- | ------------------------------------------------------------ |
+| `/trpc/*`           | tRPC HTTP handler (mounted as a Hono sub-router)             |
+| `/auth/*`           | Better Auth HTTP handler                                     |
+| `/import/ofx`       | Plain Hono route — OFX file upload (multipart/form-data)     |
 | `/jobs/process-ofx` | Plain Hono route — QStash webhook to process an uploaded OFX |
-| `/health` | Plain Hono route — liveness check |
+| `/health`           | Plain Hono route — liveness check                            |
 
 Global Hono middleware: CORS, structured request logging (pino), request-id injection, Better Auth session parsing.
 
@@ -160,12 +162,12 @@ Global Hono middleware: CORS, structured request logging (pino), request-id inje
 const app = new Hono()
   .use('*', cors({ origin: [env.WEB_ORIGIN], credentials: true }))
   .use('*', requestLogger)
-  .use('*', sessionMiddleware)        // populates c.var.session
-  .route('/auth', authRouter)          // Better Auth handler
-  .route('/import', importRouter)      // OFX upload
-  .route('/jobs', jobsRouter)          // QStash webhooks
-  .get('/health', (c) => c.json({ ok: true }))
-  .use('/trpc/*', trpcHandler)         // tRPC on top of Hono
+  .use('*', sessionMiddleware) // populates c.var.session
+  .route('/auth', authRouter) // Better Auth handler
+  .route('/import', importRouter) // OFX upload
+  .route('/jobs', jobsRouter) // QStash webhooks
+  .get('/health', c => c.json({ ok: true }))
+  .use('/trpc/*', trpcHandler) // tRPC on top of Hono
 ```
 
 ### tRPC layering — flat
@@ -181,7 +183,10 @@ export const accountsRouter = router({
   create: protectedProcedure
     .input(z.object({ nickname: z.string(), bank: z.string(), type: accountTypeSchema }))
     .mutation(({ ctx, input }) =>
-      ctx.db.insert(accounts).values({ ...input, userId: ctx.user.id }).returning(),
+      ctx.db
+        .insert(accounts)
+        .values({ ...input, userId: ctx.user.id })
+        .returning(),
     ),
 })
 ```
@@ -192,11 +197,11 @@ The shared context passed to every procedure:
 
 ```ts
 type Context = {
-  db: Database           // Drizzle client
-  user: User | null      // populated by Better Auth session middleware
+  db: Database // Drizzle client
+  user: User | null // populated by Better Auth session middleware
   req: Request
   requestId: string
-  logger: Logger         // pino child logger with { requestId }
+  logger: Logger // pino child logger with { requestId }
 }
 ```
 
@@ -270,12 +275,12 @@ Every user-owned table has a non-null `user_id` column with a foreign key to `us
 
 ### Neon branches
 
-| Branch | Used by | Location |
-|---|---|---|
-| `main` | Production `apps/api` | Vercel production env |
+| Branch                              | Used by                | Location                                             |
+| ----------------------------------- | ---------------------- | ---------------------------------------------------- |
+| `main`                              | Production `apps/api`  | Vercel production env                                |
 | `preview` (or auto-branched per PR) | Vercel preview deploys | Auto-created by Vercel ↔ Neon integration (optional) |
-| `local` | Local dev | Developer `.env.local` |
-| `test` | CI integration tests | GitHub Actions env |
+| `local`                             | Local dev              | Developer `.env.local`                               |
+| `test`                              | CI integration tests   | GitHub Actions env                                   |
 
 Local development uses a dedicated `local` Neon branch (not Docker Postgres). Each developer can fork their own branch from it if they want isolation.
 
@@ -288,6 +293,7 @@ Local development uses a dedicated `local` Neon branch (not Docker Postgres). Ea
 ### Configuration surface
 
 `packages/auth` exports:
+
 - The Better Auth server instance (consumed by `apps/api` and mounted at `/auth/*`)
 - Session type definitions (consumed by both `apps/api` and `apps/app`)
 - A `getSession(request)` helper for server-side use
@@ -306,11 +312,11 @@ Better Auth is configured with a mailer that calls `@caramelo/email` (see §7). 
 
 Frontend and backend are on different origins. Two configurations apply:
 
-| Environment | Frontend origin | Backend origin | Cookie strategy |
-|---|---|---|---|
-| Local dev | `http://localhost:5173` | `http://localhost:3000` | `SameSite=Lax`, no Secure |
-| Vercel preview | `https://app-preview-xxx.vercel.app` | `https://api-preview-xxx.vercel.app` | `SameSite=None; Secure` |
-| Production (planned) | `https://app.caramelo.com` | `https://api.caramelo.com` | Cookie `Domain=.caramelo.com`, `SameSite=Lax; Secure` |
+| Environment          | Frontend origin                      | Backend origin                       | Cookie strategy                                       |
+| -------------------- | ------------------------------------ | ------------------------------------ | ----------------------------------------------------- |
+| Local dev            | `http://localhost:5173`              | `http://localhost:3000`              | `SameSite=Lax`, no Secure                             |
+| Vercel preview       | `https://app-preview-xxx.vercel.app` | `https://api-preview-xxx.vercel.app` | `SameSite=None; Secure`                               |
+| Production (planned) | `https://app.caramelo.com`           | `https://api.caramelo.com`           | Cookie `Domain=.caramelo.com`, `SameSite=Lax; Secure` |
 
 Production cookie strategy assumes both apps live under the same parent domain. This is a deferred decision (no production domain yet) but the code should be written so switching between `SameSite=None` and `Domain=`-based cookies is a config change, not a refactor.
 
@@ -365,10 +371,10 @@ The function receives the user's current category tree (fetched fresh per invoca
 
 ### When it runs
 
-| Source | Execution |
-|---|---|
-| Manual transaction creation | **Synchronous** — inside the tRPC mutation. The user waits (~1-2s) and receives the transaction with its suggested category. |
-| OFX import | **Background** — inside the QStash job handler (§9). The mutation that receives the OFX returns immediately; the user polls for status. |
+| Source                      | Execution                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Manual transaction creation | **Synchronous** — inside the tRPC mutation. The user waits (~1-2s) and receives the transaction with its suggested category.            |
+| OFX import                  | **Background** — inside the QStash job handler (§9). The mutation that receives the OFX returns immediately; the user polls for status. |
 
 For OFX imports, classification runs with a small concurrency limit (e.g., `p-limit` at 5 concurrent requests) to keep batches fast without hammering the provider.
 
@@ -446,6 +452,7 @@ If a candidate maps to exactly one card → attach a suggestion. If it maps to m
 ### Confirmation
 
 A candidate surfaces in the UI as a pending reconciliation. On user confirmation:
+
 - Transaction `type` is updated to `transferencia`
 - Transaction is linked to the credit card (FK + optional fatura period reference)
 - Transaction no longer contributes to expense totals
@@ -478,7 +485,7 @@ await qstash.publishJSON({
 })
 
 // Receive — verified Hono route
-jobsRouter.post('/process-ofx', verifyQStash, async (c) => {
+jobsRouter.post('/process-ofx', verifyQStash, async c => {
   const { importId } = await c.req.json()
   await processOfxImport(importId)
   return c.json({ ok: true })
@@ -541,10 +548,10 @@ One bucket per environment (`caramelo-ofx-dev`, `caramelo-ofx-prod`).
 
 ### Projects
 
-| Vercel project | Root directory | Framework preset | Notes |
-|---|---|---|---|
-| `caramelo-app` | `apps/app` | Vite | Static deployment; no functions |
-| `caramelo-api` | `apps/api` | Other (custom) | Single catch-all serverless function via Hono's Vercel adapter |
+| Vercel project | Root directory | Framework preset | Notes                                                          |
+| -------------- | -------------- | ---------------- | -------------------------------------------------------------- |
+| `caramelo-app` | `apps/app`     | Vite             | Static deployment; no functions                                |
+| `caramelo-api` | `apps/api`     | Other (custom)   | Single catch-all serverless function via Hono's Vercel adapter |
 
 ### Environments
 
@@ -554,17 +561,17 @@ One bucket per environment (`caramelo-ofx-dev`, `caramelo-ofx-prod`).
 
 ### Environment variables (high level)
 
-| Variable | Used by | Purpose |
-|---|---|---|
-| `DATABASE_URL` | `apps/api` | Neon Postgres connection string (per environment) |
-| `BETTER_AUTH_SECRET` | `apps/api` | Session signing secret |
-| `WEB_ORIGIN` | `apps/api` | Allowed CORS origin (frontend URL) |
-| `API_URL` | `apps/api` + `apps/app` | Public backend URL; used by QStash publish and frontend tRPC client |
-| `RESEND_API_KEY` | `apps/api` | Resend email API |
-| `OPENAI_API_KEY` | `apps/api` | OpenAI categorization |
-| `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` | `apps/api` | QStash publish + webhook verification |
-| `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | `apps/api` | Cloudflare R2 access |
-| `VITE_API_URL` | `apps/app` | Frontend tRPC client target (Vite inlines `VITE_*` at build time) |
+| Variable                                                                | Used by                 | Purpose                                                             |
+| ----------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------- |
+| `DATABASE_URL`                                                          | `apps/api`              | Neon Postgres connection string (per environment)                   |
+| `BETTER_AUTH_SECRET`                                                    | `apps/api`              | Session signing secret                                              |
+| `WEB_ORIGIN`                                                            | `apps/api`              | Allowed CORS origin (frontend URL)                                  |
+| `API_URL`                                                               | `apps/api` + `apps/app` | Public backend URL; used by QStash publish and frontend tRPC client |
+| `RESEND_API_KEY`                                                        | `apps/api`              | Resend email API                                                    |
+| `OPENAI_API_KEY`                                                        | `apps/api`              | OpenAI categorization                                               |
+| `QSTASH_TOKEN`, `QSTASH_CURRENT_SIGNING_KEY`, `QSTASH_NEXT_SIGNING_KEY` | `apps/api`              | QStash publish + webhook verification                               |
+| `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`  | `apps/api`              | Cloudflare R2 access                                                |
+| `VITE_API_URL`                                                          | `apps/app`              | Frontend tRPC client target (Vite inlines `VITE_*` at build time)   |
 
 ### Migration execution
 
@@ -575,8 +582,8 @@ One bucket per environment (`caramelo-ofx-dev`, `caramelo-ofx-prod`).
 {
   "scripts": {
     "build": "pnpm db:migrate && tsx build.ts",
-    "db:migrate": "drizzle-kit migrate"
-  }
+    "db:migrate": "drizzle-kit migrate",
+  },
 }
 ```
 
@@ -592,14 +599,14 @@ If migrations fail, the build fails, and the old deploy keeps serving. If they s
 
 Single workflow, parallel jobs:
 
-| Job | Command |
-|---|---|
-| Lint | `pnpm lint` (ESLint across the monorepo) |
-| Format check | `pnpm format:check` (Prettier) |
-| Typecheck | `pnpm typecheck` (tsc `--noEmit` across all packages) |
+| Job                 | Command                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------- |
+| Lint                | `pnpm lint` (ESLint across the monorepo)                                                    |
+| Format check        | `pnpm format:check` (Prettier)                                                              |
+| Typecheck           | `pnpm typecheck` (tsc `--noEmit` across all packages)                                       |
 | Migration freshness | `pnpm db:check` — fails if schema changes exist without a matching generated migration file |
-| Unit tests | `pnpm test:unit` (Vitest) |
-| Integration tests | `pnpm test:integration` (Vitest against Neon `test` branch) |
+| Unit tests          | `pnpm test:unit` (Vitest)                                                                   |
+| Integration tests   | `pnpm test:integration` (Vitest against Neon `test` branch)                                 |
 
 ### On merge to `main`
 
@@ -635,6 +642,7 @@ Or a root script that runs both in parallel (e.g., `pnpm dev`).
 ### Seed data
 
 The seed script creates:
+
 - One demo user (credentials in `.env.example`)
 - 2 bank accounts (Conta Corrente, Conta Poupança)
 - 1 credit card
@@ -653,6 +661,7 @@ Enough to exercise the dashboard, category drill-down, fatura reconciliation, an
 ### Unit tests
 
 For pure functions. Colocated with the source (`foo.ts` + `foo.test.ts`). Examples:
+
 - Fatura-month calculation given a purchase date and closing day
 - Savings goal achievement logic given monthly income, expenses, and a goal
 - OFX parsing edge cases (encoding, date formats)
@@ -708,15 +717,15 @@ Schemas live next to the code that uses them. No shared validator package.
 
 Items we've deliberately punted until they matter:
 
-| Topic | Current default | Revisit when |
-|---|---|---|
-| OpenAI model choice (gpt-4o-mini vs gpt-4o vs other) | Pick `gpt-4o-mini` to start | Accuracy problems or cost spikes |
-| Prompt design for categorization | Simple structured-output prompt | Categorization quality issues |
-| OFX parser library | `node-ofx-parser` | A bank's OFX breaks the parser |
-| Production domain + cookie strategy | `SameSite=None; Secure` for previews; plan `.caramelo.com` subdomains for prod | Production launch |
-| Error monitoring (Sentry, etc.) | None | Hobby phase ends / real users |
-| LLM batching for OFX imports | No batching — serial per row with concurrency limit | Cost or latency issues |
-| R2 retention policy | Keep forever | Storage costs become noticeable |
-| Feature flags, A/B testing | None | Real product needs |
-| E2E tests | None | Flows become non-trivial to test manually |
-| Turborepo or other build orchestration | pnpm workspaces only | Build times become painful |
+| Topic                                                | Current default                                                                | Revisit when                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------ | ----------------------------------------- |
+| OpenAI model choice (gpt-4o-mini vs gpt-4o vs other) | Pick `gpt-4o-mini` to start                                                    | Accuracy problems or cost spikes          |
+| Prompt design for categorization                     | Simple structured-output prompt                                                | Categorization quality issues             |
+| OFX parser library                                   | `node-ofx-parser`                                                              | A bank's OFX breaks the parser            |
+| Production domain + cookie strategy                  | `SameSite=None; Secure` for previews; plan `.caramelo.com` subdomains for prod | Production launch                         |
+| Error monitoring (Sentry, etc.)                      | None                                                                           | Hobby phase ends / real users             |
+| LLM batching for OFX imports                         | No batching — serial per row with concurrency limit                            | Cost or latency issues                    |
+| R2 retention policy                                  | Keep forever                                                                   | Storage costs become noticeable           |
+| Feature flags, A/B testing                           | None                                                                           | Real product needs                        |
+| E2E tests                                            | None                                                                           | Flows become non-trivial to test manually |
+| Turborepo or other build orchestration               | pnpm workspaces only                                                           | Build times become painful                |

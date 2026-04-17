@@ -15,19 +15,19 @@ This document describes **what** the product does. Technical architecture and im
 
 ## 2. Glossary
 
-| Term | Meaning |
-|---|---|
-| **Receita** | A transaction that represents money coming in (e.g., salary, freelance payment, cashback). |
-| **Despesa** | A transaction that represents money going out (e.g., groceries, rent, restaurant). |
-| **Transferência** | A transaction that moves money between the user's own accounts/cards. Does not count as income or expense. |
-| **Conta** | A bank account (Conta Corrente, Conta Poupança, Conta Salário, etc.). |
-| **Cartão de Crédito** | A credit card. Has its own transactions; its bill (fatura) is paid from a bank account. |
-| **Fatura** | The monthly bill of a credit card — a group of purchases between two closing dates, due on the card's due date. |
-| **Fechamento** | The day of the month when a credit card's billing cycle closes. |
-| **Vencimento** | The day of the month when a credit card's fatura must be paid. |
-| **Categoria / Subcategoria** | A two-level classification applied to income and expense transactions. |
-| **Meta de Economia** | A user-defined monthly savings goal, expressed as a fixed amount or a percentage of income. |
-| **Reconciliação de Fatura** | The process of identifying a bank transaction as a credit card bill payment and linking it to the corresponding card. |
+| Term                         | Meaning                                                                                                               |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Receita**                  | A transaction that represents money coming in (e.g., salary, freelance payment, cashback).                            |
+| **Despesa**                  | A transaction that represents money going out (e.g., groceries, rent, restaurant).                                    |
+| **Transferência**            | A transaction that moves money between the user's own accounts/cards. Does not count as income or expense.            |
+| **Conta**                    | A bank account (Conta Corrente, Conta Poupança, Conta Salário, etc.).                                                 |
+| **Cartão de Crédito**        | A credit card. Has its own transactions; its bill (fatura) is paid from a bank account.                               |
+| **Fatura**                   | The monthly bill of a credit card — a group of purchases between two closing dates, due on the card's due date.       |
+| **Fechamento**               | The day of the month when a credit card's billing cycle closes.                                                       |
+| **Vencimento**               | The day of the month when a credit card's fatura must be paid.                                                        |
+| **Categoria / Subcategoria** | A two-level classification applied to income and expense transactions.                                                |
+| **Meta de Economia**         | A user-defined monthly savings goal, expressed as a fixed amount or a percentage of income.                           |
+| **Reconciliação de Fatura**  | The process of identifying a bank transaction as a credit card bill payment and linking it to the corresponding card. |
 
 ---
 
@@ -47,16 +47,20 @@ This document describes **what** the product does. Technical architecture and im
 This section describes the domain entities at a conceptual level. Field types, indexes, and relations are left to the architecture document.
 
 ### 4.1. User
+
 Represents a person using the app. Owns all other entities described below. Fully isolated from other users.
 
 ### 4.2. Conta (Bank Account)
+
 Represents a Brazilian bank account. Supported types include:
+
 - Conta Corrente
 - Conta Poupança
 - Conta Salário
 - Any other bank account type the user wants to register (free-form type or a predefined list — UX decision, not spec-binding).
 
 **Stored attributes:**
+
 - Nickname (user-chosen, e.g., "Itaú Principal")
 - Bank (e.g., "Itaú", "Nubank", "Santander")
 - Account type
@@ -64,9 +68,11 @@ Represents a Brazilian bank account. Supported types include:
 **Out of scope:** investments, cryptocurrency, loans (empréstimos/dívidas), and receivables are not represented as accounts in v1.
 
 ### 4.3. Cartão de Crédito (Credit Card)
+
 Represents a credit card issued to the user.
 
 **Stored attributes:**
+
 - Nickname (user-chosen, e.g., "Nubank Roxinho")
 - Bank / issuer
 - Closing day of the month (dia de fechamento)
@@ -75,6 +81,7 @@ Represents a credit card issued to the user.
 **Out of scope:** credit limit is not tracked in v1.
 
 ### 4.4. Categoria (Category)
+
 A user-scoped, two-level taxonomy used to classify income and expense transactions.
 
 - Each category has one or more subcategories (the hierarchy is exactly two levels deep).
@@ -83,14 +90,17 @@ A user-scoped, two-level taxonomy used to classify income and expense transactio
 - Users can create, rename, and delete their own categories and subcategories.
 
 ### 4.5. Transação (Transaction)
+
 A single financial movement. Each transaction belongs to exactly one account **or** one credit card.
 
 **Transaction types:**
+
 - **Receita** (income) — counts as income in all reports.
 - **Despesa** (expense) — counts as expense in all reports.
 - **Transferência** (transfer) — excluded from income and expense totals.
 
 **Stored attributes:**
+
 - Date
 - Amount (positive number; direction is implied by type)
 - Description
@@ -100,13 +110,16 @@ A single financial movement. Each transaction belongs to exactly one account **o
 - For reconciled bank transactions: a link to the credit card whose fatura this payment covers
 
 ### 4.6. Meta de Economia (Savings Goal)
+
 A monthly savings target defined globally (not per account).
 
 **Goal types:**
+
 - **Fixed amount** — e.g., "save R$ 5.000 per month".
 - **Percentage of income** — e.g., "save 30% of my income per month".
 
 **Rules:**
+
 - The user has at most one active goal at any given moment.
 - Changing the goal takes effect from the current month onward. Past months retain the goal that was active during that month, together with whether the user met it.
 - Historical goal records are preserved so the user can view past performance over time.
@@ -118,11 +131,13 @@ A monthly savings target defined globally (not per account).
 Features will be delivered incrementally (one section at a time). The list below defines the v1 scope in total.
 
 ### 5.1. Cadastro de Contas e Cartões
+
 - Users can register, edit, and delete bank accounts.
 - Users can register, edit, and delete credit cards (including fechamento and vencimento days).
 - A user can have multiple accounts and multiple cards.
 
 ### 5.2. Gestão de Categorias
+
 - On signup, the user's category tree is seeded with the default set in §8.
 - Users can create new categories and subcategories.
 - Users can rename categories and subcategories.
@@ -130,11 +145,13 @@ Features will be delivered incrementally (one section at a time). The list below
 - Category operations are scoped to transaction type (Receita vs. Despesa). A subcategory belongs to exactly one parent category.
 
 ### 5.3. Lançamento Manual de Transações
+
 - Users can create a transaction manually against any of their accounts or credit cards.
 - Users can edit and delete any transaction, regardless of whether it was created manually or via OFX import.
 - Required fields at creation: account or card, date, amount, description, type (Receita / Despesa / Transferência), and — for Receita/Despesa — category and subcategory. If the user does not pick a category, auto-categorization (§5.5) populates it.
 
 ### 5.4. Importação de Extratos (OFX)
+
 - Users upload a single OFX file, choosing the account or credit card it belongs to and the reference month.
 - One OFX import is allowed per account-or-card per month.
 - On re-import for the same account-or-card and month:
@@ -145,6 +162,7 @@ Features will be delivered incrementally (one section at a time). The list below
 - Imported transactions are tagged with `source = OFX` so the system can distinguish them from manual entries.
 
 ### 5.5. Categorização Automática (LLM)
+
 - Every newly created transaction — whether from OFX import or manual entry — is automatically classified using an LLM.
 - The LLM receives the transaction description and amount and returns a `(categoria, subcategoria)` pair from the user's current category tree.
 - The user can override the suggestion at any time by editing the transaction.
@@ -153,6 +171,7 @@ Features will be delivered incrementally (one section at a time). The list below
 - No batching is required in v1. If cost becomes an issue, batching can be introduced later.
 
 ### 5.6. Reconciliação de Fatura (Credit Card Bill Matching)
+
 Prevents credit card bill payments from being double-counted as expenses.
 
 - When bank account transactions are imported or entered, the system detects candidates that look like credit card fatura payments (by description patterns, amount, and date proximity to the fatura of one of the user's cards).
@@ -165,11 +184,13 @@ Prevents credit card bill payments from being double-counted as expenses.
 - The user can unlink a reconciliation if it was incorrect; the transaction reverts to its previous type (or to Despesa/Receita as the user edits).
 
 ### 5.7. Faturas de Cartão de Crédito
+
 - Each credit card transaction is assigned to a fatura (billing cycle) based on the transaction date and the card's closing day.
 - A fatura spans from the day after the previous closing day up to the current closing day.
 - In monthly reports and the dashboard, credit card transactions are attributed to **the month of the fatura they belong to**, not the purchase date. This aligns expenses with the month when the user actually pays for them.
 
 ### 5.8. Metas de Economia
+
 - Users can create or update their monthly savings goal (fixed amount or percentage of income).
 - Changes apply from the current month forward; they do not retroactively alter past months.
 - For each month, the system computes:
@@ -181,9 +202,11 @@ Prevents credit card bill payments from being double-counted as expenses.
 - The user can view historical months to see which goal was active, the target, the actual savings, and whether the goal was met.
 
 ### 5.9. Dashboard e Insights
+
 The dashboard is **monthly-centric**: the user navigates month by month.
 
 Target insights (built incrementally, one at a time):
+
 - **Monthly summary:** income, expenses, savings (the three headline numbers for the selected month).
 - **Expense breakdown:** spending grouped by category with drill-down into subcategory.
 - **Income breakdown:** income grouped by category with drill-down into subcategory.
@@ -193,6 +216,7 @@ Target insights (built incrementally, one at a time):
 Weekly, yearly, and trend-over-time views are out of scope for v1.
 
 ### 5.10. Autenticação
+
 - Email + password registration with email verification.
 - Login with email + password.
 - Password reset flow via email.
@@ -234,29 +258,29 @@ Every user's category tree is seeded with the following on signup. Users can mod
 
 ### 8.1. Categorias de Despesa
 
-| Categoria | Subcategorias |
-|---|---|
-| **Alimentação** | Supermercado, Restaurante, Delivery, Padaria/Café |
-| **Moradia** | Aluguel, Condomínio, Energia, Água, Gás, Internet, Manutenção |
-| **Transporte** | Combustível, Transporte público, Uber/99, Estacionamento, Manutenção veículo |
-| **Saúde** | Plano de saúde, Farmácia, Consultas, Exames |
-| **Educação** | Mensalidade, Cursos, Livros, Material |
-| **Lazer** | Streaming, Jogos, Viagem, Cultura, Esporte |
-| **Vestuário** | Roupas, Calçados, Acessórios |
-| **Serviços** | Assinaturas, Telefone/Celular, Seguros, Serviços diversos |
-| **Cuidados pessoais** | Beleza, Higiene |
-| **Pets** | Ração, Veterinário, Petshop |
-| **Impostos e taxas** | IRPF, IPTU, IPVA, Taxas bancárias |
-| **Outros** | Não categorizado |
+| Categoria             | Subcategorias                                                                |
+| --------------------- | ---------------------------------------------------------------------------- |
+| **Alimentação**       | Supermercado, Restaurante, Delivery, Padaria/Café                            |
+| **Moradia**           | Aluguel, Condomínio, Energia, Água, Gás, Internet, Manutenção                |
+| **Transporte**        | Combustível, Transporte público, Uber/99, Estacionamento, Manutenção veículo |
+| **Saúde**             | Plano de saúde, Farmácia, Consultas, Exames                                  |
+| **Educação**          | Mensalidade, Cursos, Livros, Material                                        |
+| **Lazer**             | Streaming, Jogos, Viagem, Cultura, Esporte                                   |
+| **Vestuário**         | Roupas, Calçados, Acessórios                                                 |
+| **Serviços**          | Assinaturas, Telefone/Celular, Seguros, Serviços diversos                    |
+| **Cuidados pessoais** | Beleza, Higiene                                                              |
+| **Pets**              | Ração, Veterinário, Petshop                                                  |
+| **Impostos e taxas**  | IRPF, IPTU, IPVA, Taxas bancárias                                            |
+| **Outros**            | Não categorizado                                                             |
 
 ### 8.2. Categorias de Receita
 
-| Categoria | Subcategorias |
-|---|---|
-| **Salário** | Salário, Adiantamento, 13º, Férias |
-| **Freelance** | Serviços prestados, Consultoria |
+| Categoria       | Subcategorias                            |
+| --------------- | ---------------------------------------- |
+| **Salário**     | Salário, Adiantamento, 13º, Férias       |
+| **Freelance**   | Serviços prestados, Consultoria          |
 | **Rendimentos** | Rendimento poupança, Cashback, Reembolso |
-| **Outros** | Outros recebimentos |
+| **Outros**      | Outros recebimentos                      |
 
 ---
 
