@@ -2,7 +2,7 @@
   "name": "hono",
   "type": "module",
   "scripts": {
-    "dev": "vc dev --listen 3001",
+    "dev": "tsx watch src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -11,6 +11,7 @@
   "devDependencies": {
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",
+    "@hono/node-server": "^1.19.14",
     "@types/node": "^22",
     "tsx": "^4.7.1",
     "typescript": "5.9.3"
