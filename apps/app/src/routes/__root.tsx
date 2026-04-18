@@ -13,7 +13,7 @@ function RootComponent() {
   return (
     <>
       <Outlet />
-      <Analytics />
+      <Analytics debug={false} />
       <TanStackDevtools
         config={{
           position: 'top-right',
