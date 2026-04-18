@@ -12,6 +12,28 @@ importers:
         specifier: 5.9.3
         version: 5.9.3
 
+  apps/api:
+    dependencies:
+      hono:
+        specifier: ^4.12.14
+        version: 4.12.14
+    devDependencies:
+      '@caramelo/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@caramelo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: ^22
+        version: 22.19.17
+      tsx:
+        specifier: ^4.7.1
+        version: 4.21.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
   apps/app:
     dependencies:
       '@fontsource-variable/jetbrains-mono':

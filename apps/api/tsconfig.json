@@ -1,0 +1,15 @@
+{
+  "extends": "@caramelo/typescript-config/node.json",
+
+  "compilerOptions": {
+    "outDir": "./dist",
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "hono",
+  "type": "module",
+  "scripts": {
+    "dev": "vc dev --listen 3001",
+    "build": "vc build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "^4.12.14"
+  },
+  "devDependencies": {
+    "@caramelo/eslint-config": "workspace:*",
+    "@caramelo/typescript-config": "workspace:*",
+    "@types/node": "^22",
+    "tsx": "^4.7.1",
+    "typescript": "5.9.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@caramelo/eslint-config/node.js"
+    ]
+  },
+  "prettier": "@caramelo/eslint-config/prettier.config.js"
+}
