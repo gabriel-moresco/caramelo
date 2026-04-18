@@ -12,7 +12,9 @@
     "**/node_modules": true,
     "**/pnpm-lock.yaml": true,
     ".agents/skills/**": true,
-    "**/routeTree.gen.ts": true
+    ".claude/skills/**": true,
+    "**/routeTree.gen.ts": true,
+    "CLAUDE.md": true
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
