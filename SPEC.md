@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-Caramelo is a personal finance web application for Brazilian users. It helps users track income and expenses across bank accounts and credit cards, understand where their money goes each month, and measure progress against monthly savings goals.
+Caramelo is a personal finance application for Brazilian users. It helps users track income and expenses across bank accounts and credit cards, understand where their money goes each month, and measure progress against monthly savings goals.
 
 - **Language:** Brazilian Portuguese (pt-BR) for all user-facing copy.
 - **Currency:** Brazilian Real (BRL) only.

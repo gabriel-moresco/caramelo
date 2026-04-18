@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Caramelo is a personal finance web app for Brazilian users to track income and expenses across bank accounts and credit cards and hit monthly savings goals.
+Caramelo is a personal finance app for Brazilian users to track income and expenses across bank accounts and credit cards and hit monthly savings goals.
 
 ## Caramelo's Core documentation
 

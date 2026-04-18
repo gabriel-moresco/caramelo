@@ -1,6 +1,6 @@
 # 🐕 Caramelo
 
-Open Source personal finance web app for Brazilian users. Track income and expenses across bank accounts and credit cards, understand where your money goes each month, and hit your monthly savings goals.
+Open Source personal finance app for Brazilian users. Track income and expenses across bank accounts and credit cards, understand where your money goes each month, and hit your monthly savings goals.
 
 Contributions, issues, and feedback are welcome.
 
