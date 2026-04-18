@@ -14,15 +14,21 @@
     "clear": "./scripts/clear-project.sh"
   },
   "dependencies": {
-    "typescript": "6.0.3"
+    "typescript": "5.9.3"
   },
   "packageManager": "pnpm@9.15.6",
   "engines": {
     "node": "22.x"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "lightningcss"
+    ]
+  },
   "eslintConfig": {
     "extends": [
-      "./packages/eslint-config/base.js"
+      "./packages/eslint-config/node.js"
     ]
   },
   "prettier": "./packages/eslint-config/prettier.config.js"

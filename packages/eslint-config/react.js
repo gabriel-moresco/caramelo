@@ -9,7 +9,7 @@ module.exports = {
     'standard',
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    'plugin:drizzle/recommended',
+    'plugin:@tanstack/eslint-plugin-router/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -19,7 +19,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'simple-import-sort', 'drizzle'],
+  plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
   rules: {
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
@@ -40,6 +40,6 @@ module.exports = {
     'react/display-name': 'off',
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
     'react/no-unescaped-entities': 'off',
-    'drizzle/enforce-delete-with-where': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
 }

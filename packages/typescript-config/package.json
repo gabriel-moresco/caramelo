@@ -5,7 +5,7 @@
   },
   "eslintConfig": {
     "extends": [
-      "@caramelo/eslint-config/base.js"
+      "@caramelo/eslint-config/node.js"
     ]
   },
   "prettier": "@caramelo/eslint-config/prettier.config.js"

@@ -2,10 +2,17 @@
   "files.exclude": {
     "**/node_modules": true
   },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
   "search.exclude": {
     "**/node_modules": true,
     "**/pnpm-lock.yaml": true,
-    ".agents/skills/**": true
+    ".agents/skills/**": true,
+    "**/routeTree.gen.ts": true
   },
   "typescript.tsdk": "./node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
