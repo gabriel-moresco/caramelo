@@ -14,7 +14,8 @@ function RootComponent() {
       <Outlet />
       <TanStackDevtools
         config={{
-          position: 'bottom-right',
+          position: 'top-right',
+          hideUntilHover: true,
         }}
         plugins={[
           {
