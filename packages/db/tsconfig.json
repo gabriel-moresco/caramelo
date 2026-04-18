@@ -1,6 +1,6 @@
 {
   "extends": "@caramelo/typescript-config/node.json",
 
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "drizzle.config.ts"],
   "exclude": ["node_modules"]
 }

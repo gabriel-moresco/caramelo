@@ -34,11 +34,11 @@ This document describes **what** the product does. Technical architecture and im
 ## 3. Users & Authentication
 
 - **Registration:** Users sign up with email and password.
-- **Email verification:** Required on signup.
 - **Password reset:** Available via email.
 - **Roles:** Single role — `user`. No admin, viewer, or editor variants in v1.
 - **Data isolation:** Each user sees only their own accounts, cards, transactions, categories, and goals. There is no sharing, household mode, or group access in v1.
-- **Transactional emails:** Only authentication-related messages (email verification, password reset). No product or marketing emails in v1.
+- **Transactional emails:** Only authentication-related messages (password reset). No product or marketing emails in v1.
+- **Owner notifications:** On every new signup, an internal notification email is sent to the product owner. This is not user-facing.
 
 ---
 
@@ -217,7 +217,7 @@ Weekly, yearly, and trend-over-time views are out of scope for v1.
 
 ### 5.10. Autenticação
 
-- Email + password registration with email verification.
+- Email + password registration.
 - Login with email + password.
 - Password reset flow via email.
 - Account self-service (change password, update email) — details to be refined in UX design.

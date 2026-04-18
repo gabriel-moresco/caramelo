@@ -300,8 +300,9 @@ Local development uses a dedicated `local` Neon branch (not Docker Postgres). Ea
 
 ### Flows
 
-- Email + password sign-up with **email verification** before login is allowed.
+- Email + password sign-up (no email verification in v1).
 - Password reset via email.
+- Owner notification email on every new signup (not sent to the user).
 - Session cookie (HTTP-only, Secure).
 
 ### Email sending
@@ -339,8 +340,8 @@ Production cookie strategy assumes both apps live under the same parent domain. 
 
 ### In scope for v1
 
-- Email verification
-- Password reset
+- Password reset (sent to the user)
+- New-signup notification (sent to the product owner, not the user)
 
 Nothing else. No monthly summaries, no goal-status emails, no product announcements.
 

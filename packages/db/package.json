@@ -1,13 +1,23 @@
 {
   "name": "@caramelo/db",
   "scripts": {
+    "generate": "drizzle-kit generate",
+    "drop": "drizzle-kit drop",
+    "migrate": "dotenvx run -q -f ../../apps/api/.env -- drizzle-kit migrate",
+    "studio": "dotenvx run -q -f ../../apps/api/.env -- drizzle-kit studio",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@caramelo/shared": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "postgres": "^3.4.9"
+  },
   "devDependencies": {
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",
+    "@dotenvx/dotenvx": "^1.61.1",
     "@types/node": "^22",
+    "drizzle-kit": "^0.31.10",
     "typescript": "5.9.3"
   },
   "eslintConfig": {

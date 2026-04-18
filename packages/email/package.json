@@ -3,7 +3,10 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dedent": "^1.7.2",
+    "resend": "^6.12.0"
+  },
   "devDependencies": {
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",

@@ -3,9 +3,10 @@
 
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
+    "module": "Preserve",
     "strict": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "moduleResolution": "bundler"
   }
 }

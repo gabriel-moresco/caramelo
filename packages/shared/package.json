@@ -3,7 +3,9 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {},
+  "dependencies": {
+    "nanoid": "^5.1.9"
+  },
   "devDependencies": {
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",

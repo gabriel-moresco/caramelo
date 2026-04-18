@@ -1,25 +1,31 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 
-const app = new Hono()
+import { authMiddleware, type AuthVariables } from './middlewares/auth-middleware'
+import { authRouter } from './routes/auth'
 
-app.get('/', c => {
-  return c.json({
-    message: 'Hello World!',
-  })
-})
+const app = new Hono<{ Variables: AuthVariables }>()
 
-app.get('/health', c => {
-  return c.json({
+app.use(
+  '*',
+  cors({
+    origin: process.env.VERCEL === '1' ? 'https://caramelo.moresco.cc' : 'http://localhost:3000',
+    allowHeaders: ['Content-Type', 'Authorization'],
+    allowMethods: ['GET', 'POST', 'OPTIONS'],
+    credentials: true,
+  }),
+)
+
+app.use('*', authMiddleware)
+
+app.route('/auth', authRouter)
+
+app.get('/health', c =>
+  c.json({
     status: '🐕 Caramelo API is running!',
-  })
-})
-
-app.get('/status', c => {
-  return c.json({
-    status: '🐕 Caramelo API is running!',
-  })
-})
+  }),
+)
 
 if (process.env.NODE_ENV !== 'production') {
   serve({ fetch: app.fetch, port: 3001 }, info => {

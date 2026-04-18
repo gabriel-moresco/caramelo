@@ -1,0 +1,103 @@
+import { nanoid } from '@caramelo/shared'
+import { relations } from 'drizzle-orm'
+import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+
+const id = text()
+  .primaryKey()
+  .$defaultFn(() => nanoid(16))
+
+export const usersTable = pgTable('auth_users', {
+  id,
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('email_verified').default(false).notNull(),
+  image: text('image'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  role: text('role'),
+  banned: boolean('banned').default(false),
+  banReason: text('ban_reason'),
+  banExpires: timestamp('ban_expires'),
+})
+
+export const sessionsTable = pgTable(
+  'auth_sessions',
+  {
+    id,
+    expiresAt: timestamp('expires_at').notNull(),
+    token: text('token').notNull().unique(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    userId: text('user_id')
+      .notNull()
+      .references(() => usersTable.id, { onDelete: 'cascade' }),
+    impersonatedBy: text('impersonated_by'),
+  },
+  table => [index('sessions_userId_idx').on(table.userId)],
+)
+
+export const accountsTable = pgTable(
+  'auth_accounts',
+  {
+    id,
+    accountId: text('account_id').notNull(),
+    providerId: text('provider_id').notNull(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => usersTable.id, { onDelete: 'cascade' }),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text('id_token'),
+    accessTokenExpiresAt: timestamp('access_token_expires_at'),
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  table => [index('accounts_userId_idx').on(table.userId)],
+)
+
+export const verificationsTable = pgTable(
+  'auth_verifications',
+  {
+    id,
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  table => [index('verifications_identifier_idx').on(table.identifier)],
+)
+
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  sessions: many(sessionsTable),
+  accounts: many(accountsTable),
+}))
+
+export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
+  users: one(usersTable, {
+    fields: [sessionsTable.userId],
+    references: [usersTable.id],
+  }),
+}))
+
+export const accountsRelations = relations(accountsTable, ({ one }) => ({
+  users: one(usersTable, {
+    fields: [accountsTable.userId],
+    references: [usersTable.id],
+  }),
+}))

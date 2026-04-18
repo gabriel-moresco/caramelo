@@ -1,11 +1,11 @@
 {
-  "name": "hono",
-  "type": "module",
+  "name": "@caramelo/api",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@caramelo/auth": "workspace:*",
     "hono": "^4.12.14"
   },
   "devDependencies": {
