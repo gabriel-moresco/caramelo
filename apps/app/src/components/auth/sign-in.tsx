@@ -31,7 +31,11 @@ const signInSchema = z.object({
 
 type SignInValues = z.infer<typeof signInSchema>
 
-export const SignIn = () => {
+type SignInProps = {
+  redirectTo?: string
+}
+
+export const SignIn = ({ redirectTo }: SignInProps) => {
   const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null | undefined>(null)
 
@@ -53,7 +57,7 @@ export const SignIn = () => {
       return
     }
 
-    await navigate({ to: '/' })
+    await navigate({ href: redirectTo ?? '/' })
   }
 
   return (

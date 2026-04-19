@@ -9,86 +9,161 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as EntrarRouteImport } from './routes/entrar'
-import { Route as CriarContaRouteImport } from './routes/criar-conta'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as ProtectedCartoesRouteImport } from './routes/_protected/cartoes'
+import { Route as AuthEntrarRouteImport } from './routes/_auth/entrar'
+import { Route as AuthCriarContaRouteImport } from './routes/_auth/criar-conta'
 
-const EntrarRoute = EntrarRouteImport.update({
-  id: '/entrar',
-  path: '/entrar',
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CriarContaRoute = CriarContaRouteImport.update({
-  id: '/criar-conta',
-  path: '/criar-conta',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedCartoesRoute = ProtectedCartoesRouteImport.update({
+  id: '/cartoes',
+  path: '/cartoes',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const AuthEntrarRoute = AuthEntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthCriarContaRoute = AuthCriarContaRouteImport.update({
+  id: '/criar-conta',
+  path: '/criar-conta',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/criar-conta': typeof CriarContaRoute
-  '/entrar': typeof EntrarRoute
+  '/': typeof ProtectedIndexRoute
+  '/criar-conta': typeof AuthCriarContaRoute
+  '/entrar': typeof AuthEntrarRoute
+  '/cartoes': typeof ProtectedCartoesRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/criar-conta': typeof CriarContaRoute
-  '/entrar': typeof EntrarRoute
+  '/': typeof ProtectedIndexRoute
+  '/criar-conta': typeof AuthCriarContaRoute
+  '/entrar': typeof AuthEntrarRoute
+  '/cartoes': typeof ProtectedCartoesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/criar-conta': typeof CriarContaRoute
-  '/entrar': typeof EntrarRoute
+  '/_auth': typeof AuthRouteRouteWithChildren
+  '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/_auth/criar-conta': typeof AuthCriarContaRoute
+  '/_auth/entrar': typeof AuthEntrarRoute
+  '/_protected/cartoes': typeof ProtectedCartoesRoute
+  '/_protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/criar-conta' | '/entrar'
+  fullPaths: '/' | '/criar-conta' | '/entrar' | '/cartoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/criar-conta' | '/entrar'
-  id: '__root__' | '/' | '/criar-conta' | '/entrar'
+  to: '/' | '/criar-conta' | '/entrar' | '/cartoes'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_protected'
+    | '/_auth/criar-conta'
+    | '/_auth/entrar'
+    | '/_protected/cartoes'
+    | '/_protected/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CriarContaRoute: typeof CriarContaRoute
-  EntrarRoute: typeof EntrarRoute
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/entrar': {
-      id: '/entrar'
-      path: '/entrar'
-      fullPath: '/entrar'
-      preLoaderRoute: typeof EntrarRouteImport
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/criar-conta': {
-      id: '/criar-conta'
-      path: '/criar-conta'
-      fullPath: '/criar-conta'
-      preLoaderRoute: typeof CriarContaRouteImport
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_protected/': {
+      id: '/_protected/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/cartoes': {
+      id: '/_protected/cartoes'
+      path: '/cartoes'
+      fullPath: '/cartoes'
+      preLoaderRoute: typeof ProtectedCartoesRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_auth/entrar': {
+      id: '/_auth/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof AuthEntrarRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/criar-conta': {
+      id: '/_auth/criar-conta'
+      path: '/criar-conta'
+      fullPath: '/criar-conta'
+      preLoaderRoute: typeof AuthCriarContaRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
 
+interface AuthRouteRouteChildren {
+  AuthCriarContaRoute: typeof AuthCriarContaRoute
+  AuthEntrarRoute: typeof AuthEntrarRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthCriarContaRoute: AuthCriarContaRoute,
+  AuthEntrarRoute: AuthEntrarRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+interface ProtectedRouteRouteChildren {
+  ProtectedCartoesRoute: typeof ProtectedCartoesRoute
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
+}
+
+const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedCartoesRoute: ProtectedCartoesRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
+}
+
+const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
+  ProtectedRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CriarContaRoute: CriarContaRoute,
-  EntrarRoute: EntrarRoute,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
