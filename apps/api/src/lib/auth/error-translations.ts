@@ -1,8 +1,6 @@
 import type { APIErrorCode as BaseAuthErrorCode } from 'better-auth'
 import type { admin } from 'better-auth/plugins'
 
-import type { authClient } from './auth-client'
-
 const baseErrors: Record<BaseAuthErrorCode, string> = {
   ACCOUNT_NOT_FOUND: 'Conta não encontrada.',
   ASYNC_VALIDATION_NOT_SUPPORTED: 'Validação assíncrona não é suportada.',
@@ -83,9 +81,7 @@ const adminErrors: Record<AdminOnlyErrorCode, string> = {
   YOU_CANNOT_REMOVE_YOURSELF: 'Você não pode remover a si mesmo.',
 }
 
-type AuthErrorCode = keyof typeof authClient.$ERROR_CODES
-
-export const translatedErrorMessages: Record<AuthErrorCode, string> = {
+export const translatedErrorMessages = {
   ...baseErrors,
   ...adminErrors,
 }

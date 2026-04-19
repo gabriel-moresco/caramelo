@@ -1,6 +1,0 @@
-{
-  "extends": "@caramelo/typescript-config/node.json",
-
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
-}

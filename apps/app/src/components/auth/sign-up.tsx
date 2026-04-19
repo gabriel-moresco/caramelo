@@ -1,4 +1,3 @@
-import { authClient } from '@caramelo/auth/client'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
@@ -23,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { authClient } from '@/lib/auth/client'
 
 const signUpSchema = z.object({
   name: z.string().trim().min(1, 'Informe seu nome'),

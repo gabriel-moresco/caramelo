@@ -3,7 +3,6 @@
   "scripts": {
     "app": "pnpm --dir apps/app",
     "api": "pnpm --dir apps/api",
-    "auth": "pnpm --dir packages/auth",
     "db": "pnpm --dir packages/db",
     "email": "pnpm --dir packages/email",
     "eslint-config": "pnpm --dir packages/eslint-config",

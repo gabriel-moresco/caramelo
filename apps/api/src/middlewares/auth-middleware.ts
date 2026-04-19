@@ -1,5 +1,6 @@
-import { auth } from '@caramelo/auth/server'
 import { createMiddleware } from 'hono/factory'
+
+import { auth } from '../lib/auth/auth'
 
 export type AuthVariables = {
   user: typeof auth.$Infer.Session.user | null

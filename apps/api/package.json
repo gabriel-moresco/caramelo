@@ -5,7 +5,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@caramelo/auth": "workspace:*",
+    "@better-auth/i18n": "^1.6.5",
+    "@caramelo/db": "workspace:*",
+    "@caramelo/email": "workspace:*",
+    "better-auth": "^1.6.5",
     "hono": "^4.12.14"
   },
   "devDependencies": {

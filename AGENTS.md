@@ -16,7 +16,7 @@ Rules that always apply across the entire project:
 - All user-facing text must be written in Brazilian Portuguese (pt-BR). Code-level strings remain in English.
 - Prefer using arrow functions (`const myFunction = ({ arg1, arg2 }: MyType) => { ... }`)
 - Prefer using `type` instead of `interface` when applicable.
-- For monorepo packages in `package.json`, use `workspace:*` (not `workspace:^`). Example: `"@caramelo/auth": "workspace:*"`.
+- For monorepo packages in `package.json`, use `workspace:*` (not `workspace:^`). Example: `"@caramelo/db": "workspace:*"`.
 - Never run dev commands or start dev servers (e.g., `pnpm dev`). The app and api dev servers are always running — just use them: app at `http://localhost:3000`, api at `http://localhost:3001`.
 
 ## UI rules

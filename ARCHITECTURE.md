@@ -286,17 +286,17 @@ Local development uses a dedicated `local` Neon branch (not Docker Postgres). Ea
 
 ---
 
-## 6. Authentication — `packages/auth`
+## 6. Authentication — local modules in `apps/app` and `apps/api`
 
 **Library:** [Better Auth](https://better-auth.com/).
 
 ### Configuration surface
 
-`packages/auth` exports:
+Auth is split by runtime boundary:
 
-- The Better Auth server instance (consumed by `apps/api` and mounted at `/auth/*`)
-- Session type definitions (consumed by both `apps/api` and `apps/app`)
-- A `getSession(request)` helper for server-side use
+- `apps/api/src/lib/auth/auth.ts` exports the Better Auth server instance and is mounted at `/auth/*`.
+- `apps/api/src/lib/auth/error-translations.ts` defines the pt-BR i18n map for auth errors.
+- `apps/app/src/lib/auth/client.ts` exports the Better Auth client used by browser-side flows.
 
 ### Flows
 
@@ -307,7 +307,7 @@ Local development uses a dedicated `local` Neon branch (not Docker Postgres). Ea
 
 ### Email sending
 
-Better Auth is configured with a mailer that calls `@caramelo/email` (see §7). No direct Resend SDK usage in `packages/auth`.
+Better Auth is configured with a mailer that calls `@caramelo/email` (see §7). No direct Resend SDK usage in `apps/api/src/lib/auth`.
 
 ### Cross-origin cookies
 
@@ -315,7 +315,7 @@ Frontend and backend are on different origins. Two configurations apply:
 
 | Environment          | Frontend origin                      | Backend origin                       | Cookie strategy                                       |
 | -------------------- | ------------------------------------ | ------------------------------------ | ----------------------------------------------------- |
-| Local dev            | `http://localhost:5173`              | `http://localhost:3000`              | `SameSite=Lax`, no Secure                             |
+| Local dev            | `http://localhost:3000`              | `http://localhost:3001`              | `SameSite=Lax`, no Secure                             |
 | Vercel preview       | `https://app-preview-xxx.vercel.app` | `https://api-preview-xxx.vercel.app` | `SameSite=None; Secure`                               |
 | Production (planned) | `https://app.caramelo.com`           | `https://api.caramelo.com`           | Cookie `Domain=.caramelo.com`, `SameSite=Lax; Secure` |
 
@@ -348,7 +348,7 @@ Nothing else. No monthly summaries, no goal-status emails, no product announceme
 ### Why a dedicated package
 
 - Keeps Resend's API key usage in one place
-- Templates are reused between `packages/auth` (which invokes them) and future flows
+- Templates are reused between `apps/api/src/lib/auth` (which invokes them) and future flows
 - Templates are easy to preview via React Email's dev server
 
 ---
@@ -699,7 +699,8 @@ Short-lived feature branches. Squash merge to `main`. PR title follows the commi
 
 ### Imports
 
-- Workspace packages imported by scoped name: `@caramelo/db`, `@caramelo/auth`, etc.
+- Workspace packages imported by scoped name: `@caramelo/db`, `@caramelo/email`, etc.
+- Runtime-specific auth modules are imported from each app's local tree (e.g., `@/lib/auth/client` in `apps/app` and `../lib/auth/auth` in `apps/api`).
 - No deep imports — only what each package exports.
 - No circular dependencies between packages.
 
