@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/lint-format-on-edit.mjs",
+        "matcher": "Write|MultiEdit|TabWrite",
+        "timeout": 120
+      }
+    ]
+  }
+}
