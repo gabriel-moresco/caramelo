@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -24,10 +24,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/client'
 
-const signUpSchema = z
+const resetPasswordSchema = z
   .object({
-    name: z.string().trim().min(1, 'Informe seu nome'),
-    email: z.email('Informe um e-mail válido'),
     password: z.string().min(8, 'A senha precisa ter pelo menos 8 caracteres'),
     confirmPassword: z.string().min(1, 'Confirme sua senha'),
   })
@@ -36,54 +34,53 @@ const signUpSchema = z
     message: 'As senhas não conferem',
   })
 
-type SignUpValues = z.infer<typeof signUpSchema>
+type ResetPasswordValues = z.infer<typeof resetPasswordSchema>
 
-export const SignUp = () => {
+type ResetPasswordProps = {
+  token?: string
+  error?: string
+}
+
+export const ResetPassword = ({ token, error }: ResetPasswordProps) => {
+  const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null | undefined>(null)
-  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null)
 
-  const form = useForm<SignUpValues>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+  const form = useForm<ResetPasswordValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { password: '', confirmPassword: '' },
   })
 
-  const onSubmit = async (values: SignUpValues) => {
+  const onSubmit = async (values: ResetPasswordValues) => {
+    if (!token) return
     setFormError(null)
 
-    const { error } = await authClient.signUp.email({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      callbackURL: `${window.location.origin}/`,
+    const { error: resetError } = await authClient.resetPassword({
+      newPassword: values.password,
+      token,
     })
 
-    if (error) {
-      setFormError(error.message)
+    if (resetError) {
+      setFormError(resetError.message)
       return
     }
 
-    setSubmittedEmail(values.email)
+    await navigate({ to: '/entrar' })
   }
 
-  if (submittedEmail) {
+  if (error || !token) {
     return (
       <main className='bg-muted/30 flex min-h-svh items-center justify-center p-6'>
         <Card className='w-full max-w-sm'>
           <CardHeader className='items-center text-center'>
             <img src='/assets/logo.png' alt='Caramelo' className='mx-auto mb-3 h-7 w-auto' />
-            <CardTitle>Verifique seu e-mail</CardTitle>
+            <CardTitle>Link inválido ou expirado</CardTitle>
             <CardDescription>
-              Enviamos um link de verificação para <strong>{submittedEmail}</strong>. Clique no link
-              para ativar sua conta e entrar automaticamente.
+              Este link de redefinição não é mais válido. Solicite um novo para continuar.
             </CardDescription>
           </CardHeader>
-          <CardContent className='text-muted-foreground text-center text-xs'>
-            Não recebeu o e-mail? Verifique sua caixa de spam ou tente entrar novamente para
-            reenviar.
-          </CardContent>
           <CardFooter className='justify-center text-xs'>
-            <Link to='/entrar' className='font-medium underline-offset-4 hover:underline'>
-              Voltar para entrar
+            <Link to='/esqueci-senha' className='font-medium underline-offset-4 hover:underline'>
+              Solicitar novo link
             </Link>
           </CardFooter>
         </Card>
@@ -96,49 +93,18 @@ export const SignUp = () => {
       <Card className='w-full max-w-sm'>
         <CardHeader className='items-center text-center'>
           <img src='/assets/logo.png' alt='Caramelo' className='mx-auto mb-3 h-7 w-auto' />
-          <CardTitle>Criar conta no Caramelo</CardTitle>
-          <CardDescription>Comece a organizar suas finanças em minutos.</CardDescription>
+          <CardTitle>Redefinir senha</CardTitle>
+          <CardDescription>Escolha uma nova senha para acessar sua conta.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4'>
               <FormField
                 control={form.control}
-                name='name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input type='text' autoComplete='name' placeholder='Steve Jobs' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-mail</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='email'
-                        autoComplete='email'
-                        placeholder='sjobs@apple.com'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Senha</FormLabel>
+                    <FormLabel>Nova senha</FormLabel>
                     <FormControl>
                       <Input
                         type='password'
@@ -156,7 +122,7 @@ export const SignUp = () => {
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirmar senha</FormLabel>
+                    <FormLabel>Confirmar nova senha</FormLabel>
                     <FormControl>
                       <Input
                         type='password'
@@ -177,15 +143,14 @@ export const SignUp = () => {
               )}
 
               <Button type='submit' disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Criando conta…' : 'Criar conta'}
+                {form.formState.isSubmitting ? 'Salvando…' : 'Redefinir senha'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className='justify-center text-xs'>
-          <span className='text-muted-foreground'>Já tem conta?&nbsp;</span>
           <Link to='/entrar' className='font-medium underline-offset-4 hover:underline'>
-            Entrar
+            Voltar para entrar
           </Link>
         </CardFooter>
       </Card>

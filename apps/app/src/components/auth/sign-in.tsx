@@ -181,7 +181,15 @@ export const SignIn = ({ redirectTo }: SignInProps) => {
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Senha</FormLabel>
+                    <div className='flex items-center justify-between'>
+                      <FormLabel>Senha</FormLabel>
+                      <Link
+                        to='/esqueci-senha'
+                        className='text-muted-foreground text-xs underline-offset-4 hover:underline'
+                      >
+                        Esqueceu sua senha?
+                      </Link>
+                    </div>
                     <FormControl>
                       <Input
                         type='password'

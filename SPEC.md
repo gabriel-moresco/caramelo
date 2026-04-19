@@ -35,7 +35,7 @@ This document describes **what** the product does. Technical architecture and im
 
 - **Registration:** Users sign up with email and password.
 - **Email verification:** Required before sign-in. On sign-up, a verification link is emailed to the user; clicking it activates the account and signs the user in automatically. Attempting to sign in before verifying triggers a fresh verification email. A resend action is available from the sign-in screen.
-- **Password reset:** Available via email.
+- **Password reset:** Users request a reset link from the sign-in screen by entering their e-mail. The link takes them to a page where they set a new password; on success they are sent back to sign in (no auto sign-in). For anti-enumeration, the request response does not reveal whether the e-mail is registered. All active sessions are revoked when a password is reset.
 - **Roles:** Single role — `user`. No admin, viewer, or editor variants in v1.
 - **Data isolation:** Each user sees only their own accounts, cards, transactions, categories, and goals. There is no sharing, household mode, or group access in v1.
 - **Transactional emails:** Only authentication-related messages (email verification, password reset). No product or marketing emails in v1.
@@ -221,7 +221,7 @@ Weekly, yearly, and trend-over-time views are out of scope for v1.
 - Email + password registration.
 - Email verification required before sign-in (link-based, with resend and auto sign-in after verification).
 - Login with email + password.
-- Password reset flow via email.
+- Password reset flow via email: request from sign-in, set a new password from the emailed link, then return to sign-in (no auto sign-in). Existing sessions are revoked on reset.
 - Account self-service (change password, update email) — details to be refined in UX design.
 
 ---

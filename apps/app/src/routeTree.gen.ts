@@ -13,6 +13,8 @@ import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
 import { Route as ProtectedCartoesRouteImport } from './routes/_protected/cartoes'
+import { Route as AuthRedefinirSenhaRouteImport } from './routes/_auth/redefinir-senha'
+import { Route as AuthEsqueciSenhaRouteImport } from './routes/_auth/esqueci-senha'
 import { Route as AuthEntrarRouteImport } from './routes/_auth/entrar'
 import { Route as AuthCriarContaRouteImport } from './routes/_auth/criar-conta'
 
@@ -34,6 +36,16 @@ const ProtectedCartoesRoute = ProtectedCartoesRouteImport.update({
   path: '/cartoes',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
+const AuthRedefinirSenhaRoute = AuthRedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthEsqueciSenhaRoute = AuthEsqueciSenhaRouteImport.update({
+  id: '/esqueci-senha',
+  path: '/esqueci-senha',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthEntrarRoute = AuthEntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
@@ -49,12 +61,16 @@ export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/criar-conta': typeof AuthCriarContaRoute
   '/entrar': typeof AuthEntrarRoute
+  '/esqueci-senha': typeof AuthEsqueciSenhaRoute
+  '/redefinir-senha': typeof AuthRedefinirSenhaRoute
   '/cartoes': typeof ProtectedCartoesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof ProtectedIndexRoute
   '/criar-conta': typeof AuthCriarContaRoute
   '/entrar': typeof AuthEntrarRoute
+  '/esqueci-senha': typeof AuthEsqueciSenhaRoute
+  '/redefinir-senha': typeof AuthRedefinirSenhaRoute
   '/cartoes': typeof ProtectedCartoesRoute
 }
 export interface FileRoutesById {
@@ -63,20 +79,36 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/_auth/criar-conta': typeof AuthCriarContaRoute
   '/_auth/entrar': typeof AuthEntrarRoute
+  '/_auth/esqueci-senha': typeof AuthEsqueciSenhaRoute
+  '/_auth/redefinir-senha': typeof AuthRedefinirSenhaRoute
   '/_protected/cartoes': typeof ProtectedCartoesRoute
   '/_protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/criar-conta' | '/entrar' | '/cartoes'
+  fullPaths:
+    | '/'
+    | '/criar-conta'
+    | '/entrar'
+    | '/esqueci-senha'
+    | '/redefinir-senha'
+    | '/cartoes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/criar-conta' | '/entrar' | '/cartoes'
+  to:
+    | '/'
+    | '/criar-conta'
+    | '/entrar'
+    | '/esqueci-senha'
+    | '/redefinir-senha'
+    | '/cartoes'
   id:
     | '__root__'
     | '/_auth'
     | '/_protected'
     | '/_auth/criar-conta'
     | '/_auth/entrar'
+    | '/_auth/esqueci-senha'
+    | '/_auth/redefinir-senha'
     | '/_protected/cartoes'
     | '/_protected/'
   fileRoutesById: FileRoutesById
@@ -116,6 +148,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedCartoesRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
+    '/_auth/redefinir-senha': {
+      id: '/_auth/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/redefinir-senha'
+      preLoaderRoute: typeof AuthRedefinirSenhaRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/esqueci-senha': {
+      id: '/_auth/esqueci-senha'
+      path: '/esqueci-senha'
+      fullPath: '/esqueci-senha'
+      preLoaderRoute: typeof AuthEsqueciSenhaRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/entrar': {
       id: '/_auth/entrar'
       path: '/entrar'
@@ -136,11 +182,15 @@ declare module '@tanstack/react-router' {
 interface AuthRouteRouteChildren {
   AuthCriarContaRoute: typeof AuthCriarContaRoute
   AuthEntrarRoute: typeof AuthEntrarRoute
+  AuthEsqueciSenhaRoute: typeof AuthEsqueciSenhaRoute
+  AuthRedefinirSenhaRoute: typeof AuthRedefinirSenhaRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthCriarContaRoute: AuthCriarContaRoute,
   AuthEntrarRoute: AuthEntrarRoute,
+  AuthEsqueciSenhaRoute: AuthEsqueciSenhaRoute,
+  AuthRedefinirSenhaRoute: AuthRedefinirSenhaRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
