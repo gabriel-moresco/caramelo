@@ -9,7 +9,10 @@
     "shared": "pnpm --dir packages/shared",
     "typescript-config": "pnpm --dir packages/typescript-config",
     "typecheck": "pnpm -r run typecheck",
-    "lint": "eslint . --fix && prettier . --write",
+    "lint:file": "eslint --fix",
+    "format:file": "prettier --write --ignore-unknown",
+    "check": "eslint . && prettier --check .",
+    "fix": "eslint . --fix && prettier . --write",
     "clear": "./scripts/clear-project.sh"
   },
   "dependencies": {

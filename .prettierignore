@@ -2,3 +2,7 @@ node_modules
 pnpm-lock.yaml
 **/migrations/meta
 .agents/skills/**
+
+.tanstack
+dist
+.vercel
