@@ -30,12 +30,43 @@ export const sendResetPasswordEmail = async ({
   })
 }
 
-type SendNewUserEmailProps = {
+type SendVerificationEmailProps = {
+  userEmail: string
+  userName: string
+  verificationUrl: string
+}
+
+export const sendVerificationEmail = async ({
+  userEmail,
+  userName,
+  verificationUrl,
+}: SendVerificationEmailProps) => {
+  await client.send({
+    to: userEmail,
+    subject: 'Confirme seu e-mail | Caramelo',
+    text: dedent`
+    Olá ${userName.split(' ')[0]},
+
+    Para concluir seu cadastro no Caramelo, confirme seu e-mail acessando o link abaixo:
+
+    ${verificationUrl}
+
+    Se você não criou esta conta, pode ignorar este e-mail.
+
+    Atenciosamente,
+    Gabriel Moresco`,
+  })
+}
+
+type SendNewUserNotificationEmailProps = {
   userEmail: string
   userName: string
 }
 
-export const sendNewUserEmail = async ({ userEmail, userName }: SendNewUserEmailProps) => {
+export const sendNewUserNotificationEmail = async ({
+  userEmail,
+  userName,
+}: SendNewUserNotificationEmailProps) => {
   await client.send({
     to: 'gabriel@moresco.cc',
     subject: 'Novo usuário criado | Caramelo',

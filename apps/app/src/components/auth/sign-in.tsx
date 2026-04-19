@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -38,6 +38,16 @@ type SignInProps = {
 export const SignIn = ({ redirectTo }: SignInProps) => {
   const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null | undefined>(null)
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
+  const [isResending, setIsResending] = useState(false)
+  const [resentAt, setResentAt] = useState<number | null>(null)
+  const [resendCooldown, setResendCooldown] = useState(0)
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return
+    const timer = setTimeout(() => setResendCooldown(seconds => seconds - 1), 1000)
+    return () => clearTimeout(timer)
+  }, [resendCooldown])
 
   const form = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
@@ -46,18 +56,95 @@ export const SignIn = ({ redirectTo }: SignInProps) => {
 
   const onSubmit = async (values: SignInValues) => {
     setFormError(null)
+    setUnverifiedEmail(null)
+    setResentAt(null)
 
     const { error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,
+      callbackURL: `${window.location.origin}${redirectTo ?? '/'}`,
     })
 
     if (error) {
+      if (error.code === 'EMAIL_NOT_VERIFIED') {
+        setUnverifiedEmail(values.email)
+        setResendCooldown(60)
+        return
+      }
       setFormError(error.message)
       return
     }
 
     await navigate({ href: redirectTo ?? '/' })
+  }
+
+  const handleResend = async () => {
+    if (!unverifiedEmail || resendCooldown > 0) return
+    setIsResending(true)
+    const { error } = await authClient.sendVerificationEmail({
+      email: unverifiedEmail,
+      callbackURL: `${window.location.origin}/`,
+    })
+    setIsResending(false)
+    if (error) {
+      setFormError(error.message)
+      return
+    }
+    setResentAt(Date.now())
+    setResendCooldown(60)
+  }
+
+  if (unverifiedEmail) {
+    return (
+      <main className='bg-muted/30 flex min-h-svh items-center justify-center p-6'>
+        <Card className='w-full max-w-sm'>
+          <CardHeader className='items-center text-center'>
+            <img src='/assets/logo.png' alt='Caramelo' className='mx-auto mb-3 h-7 w-auto' />
+            <CardTitle>Verifique seu e-mail</CardTitle>
+            <CardDescription>
+              Enviamos um link de verificação para <strong>{unverifiedEmail}</strong>. Confirme sua
+              conta para continuar.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='grid gap-3'>
+            <Button
+              onClick={handleResend}
+              disabled={isResending || resendCooldown > 0}
+              variant='outline'
+            >
+              {isResending
+                ? 'Reenviando…'
+                : resendCooldown > 0
+                  ? `Reenviar em ${resendCooldown}s`
+                  : 'Reenviar e-mail de verificação'}
+            </Button>
+            {resentAt && (
+              <p className='text-muted-foreground text-center text-xs'>
+                Novo e-mail enviado. Verifique sua caixa de entrada.
+              </p>
+            )}
+            {formError && (
+              <p role='alert' className='text-destructive text-center text-xs'>
+                {formError}
+              </p>
+            )}
+          </CardContent>
+          <CardFooter className='justify-center text-xs'>
+            <button
+              type='button'
+              onClick={() => {
+                setUnverifiedEmail(null)
+                setResentAt(null)
+                setFormError(null)
+              }}
+              className='font-medium underline-offset-4 hover:underline'
+            >
+              Voltar
+            </button>
+          </CardFooter>
+        </Card>
+      </main>
+    )
   }
 
   return (

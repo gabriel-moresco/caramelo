@@ -300,7 +300,8 @@ Auth is split by runtime boundary:
 
 ### Flows
 
-- Email + password sign-up (no email verification in v1).
+- Email + password sign-up.
+- Email verification required before sign-in (`emailAndPassword.requireEmailVerification: true`). Verification emails are sent on sign-up (`sendOnSignUp`) and on any sign-in attempt by an unverified user (`sendOnSignIn`). `autoSignInAfterVerification` signs the user in when they click the link. The frontend exposes a resend action from the sign-in screen.
 - Password reset via email.
 - Owner notification email on every new signup (not sent to the user).
 - Session cookie (HTTP-only, Secure).
@@ -340,6 +341,7 @@ Production cookie strategy assumes both apps live under the same parent domain. 
 
 ### In scope for v1
 
+- Email verification (sent to the user on sign-up or on an unverified sign-in attempt)
 - Password reset (sent to the user)
 - New-signup notification (sent to the product owner, not the user)
 

@@ -1,6 +1,10 @@
 import { i18n } from '@better-auth/i18n'
 import { accountsTable, db, sessionsTable, usersTable, verificationsTable } from '@caramelo/db'
-import { sendNewUserEmail, sendResetPasswordEmail } from '@caramelo/email'
+import {
+  sendNewUserNotificationEmail,
+  sendResetPasswordEmail,
+  sendVerificationEmail,
+} from '@caramelo/email'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, openAPI } from 'better-auth/plugins'
@@ -20,12 +24,25 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: ({ user, url }) =>
       sendResetPasswordEmail({
         userEmail: user.email,
         userName: user.name,
         resetPasswordUrl: url,
+      }),
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendOnSignIn: true,
+    autoSignInAfterVerification: true,
+    expiresIn: 60 * 60,
+    sendVerificationEmail: ({ user, url }) =>
+      sendVerificationEmail({
+        userEmail: user.email,
+        userName: user.name,
+        verificationUrl: url,
       }),
   },
   baseURL: process.env.VERCEL === '1' ? 'https://api.caramelo.moresco.cc' : 'http://localhost:3001',
@@ -50,7 +67,7 @@ export const auth = betterAuth({
       create: {
         after: async user => {
           try {
-            await sendNewUserEmail({
+            await sendNewUserNotificationEmail({
               userEmail: user.email,
               userName: user.name,
             })

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -33,8 +33,8 @@ const signUpSchema = z.object({
 type SignUpValues = z.infer<typeof signUpSchema>
 
 export const SignUp = () => {
-  const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null | undefined>(null)
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null)
 
   const form = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
@@ -48,6 +48,7 @@ export const SignUp = () => {
       name: values.name,
       email: values.email,
       password: values.password,
+      callbackURL: `${window.location.origin}/`,
     })
 
     if (error) {
@@ -55,7 +56,33 @@ export const SignUp = () => {
       return
     }
 
-    await navigate({ to: '/' })
+    setSubmittedEmail(values.email)
+  }
+
+  if (submittedEmail) {
+    return (
+      <main className='bg-muted/30 flex min-h-svh items-center justify-center p-6'>
+        <Card className='w-full max-w-sm'>
+          <CardHeader className='items-center text-center'>
+            <img src='/assets/logo.png' alt='Caramelo' className='mx-auto mb-3 h-7 w-auto' />
+            <CardTitle>Verifique seu e-mail</CardTitle>
+            <CardDescription>
+              Enviamos um link de verificação para <strong>{submittedEmail}</strong>. Clique no link
+              para ativar sua conta e entrar automaticamente.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='text-muted-foreground text-center text-xs'>
+            Não recebeu o e-mail? Verifique sua caixa de spam ou tente entrar novamente para
+            reenviar.
+          </CardContent>
+          <CardFooter className='justify-center text-xs'>
+            <Link to='/entrar' className='font-medium underline-offset-4 hover:underline'>
+              Voltar para entrar
+            </Link>
+          </CardFooter>
+        </Card>
+      </main>
+    )
   }
 
   return (
