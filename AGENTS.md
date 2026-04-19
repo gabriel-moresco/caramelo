@@ -23,6 +23,7 @@ Rules that always apply across the entire project:
 
 Specific rules for React components development (applies to `apps/app/**/*.tsx`):
 
+- All UIs must be responsive and work correctly on both mobile and desktop screen sizes.
 - Do not implement dark mode styles or classes (e.g., `dark:`) in UI components, as the application is forced to light mode only.
 - When defining the size of an element with Tailwind classes, use `size-{n}` instead of `w-{n} h-{n}` (e.g., `size-4` instead of `w-4 h-4`).
 - When formatting dates and times, always use `dayjs`.

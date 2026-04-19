@@ -1,8 +1,11 @@
+import { i18n } from '@better-auth/i18n'
 import { accountsTable, db, sessionsTable, usersTable, verificationsTable } from '@caramelo/db'
 import { sendNewUserEmail, sendResetPasswordEmail } from '@caramelo/email'
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, openAPI } from 'better-auth/plugins'
+
+import { translatedErrorMessages } from './error-translations'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -30,7 +33,18 @@ export const auth = betterAuth({
   trustedOrigins:
     process.env.VERCEL === '1' ? ['https://caramelo.moresco.cc'] : ['http://localhost:3000'],
   appName: 'Caramelo',
-  plugins: [admin(), openAPI()],
+  plugins: [
+    admin(),
+    openAPI(),
+    i18n({
+      translations: {
+        'pt-BR': translatedErrorMessages,
+      },
+      defaultLocale: 'pt-BR',
+      detection: ['callback'],
+      getLocale: () => 'pt-BR',
+    }),
+  ],
   databaseHooks: {
     user: {
       create: {
