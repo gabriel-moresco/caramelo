@@ -1,6 +1,18 @@
-# 🐕 Caramelo
+<div>
+  <h1 align="center"><b>🐕 Caramelo</b></h1>
+  <p align="center">
+    Open Source personal finance app for Brazilian users.
+    <br />
+    <br />
+    <a href="https://caramelo.moresco.cc">Website</a>
+    ·
+    <a href="./SPEC.md">Spec</a>
+  </p>
+</div>
 
-Open Source personal finance app for Brazilian users. Track income and expenses across bank accounts and credit cards, understand where your money goes each month, and hit your monthly savings goals.
+## About Caramelo
+
+Caramelo is an Open Source personal finance app for Brazilian users. Track income and expenses across bank accounts and credit cards, understand where your money goes each month, and hit your monthly savings goals.
 
 Contributions, issues, and feedback are welcome.
 
