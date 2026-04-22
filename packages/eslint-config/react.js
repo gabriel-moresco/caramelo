@@ -20,6 +20,11 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', '@typescript-eslint', 'simple-import-sort'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   rules: {
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
