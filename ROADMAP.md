@@ -1,6 +1,6 @@
 # Caramelo — Roadmap
 
-This document captures **in what order** features land. `SPEC.md` covers what the product does; `ARCHITECTURE.md` covers how it's built; this is the delivery sequence.
+This document captures **in what order** features land. `SPEC.md` covers what the product does.
 
 ## Approach
 

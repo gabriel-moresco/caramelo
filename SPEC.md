@@ -9,7 +9,7 @@ Caramelo is a personal finance application for Brazilian users. It helps users t
 - **Platform:** Web application in v1. CLI and MCP server interfaces are planned for future releases.
 - **Users:** Multi-user, self-serve. Each user's data is strictly isolated from other users.
 
-This document describes **what** the product does. Technical architecture and implementation decisions are documented separately in `ARCHITECTURE.md`.
+This document describes **what** the product does.
 
 ---
 
@@ -45,7 +45,7 @@ This document describes **what** the product does. Technical architecture and im
 
 ## 4. Core Entities (Conceptual Model)
 
-This section describes the domain entities at a conceptual level. Field types, indexes, and relations are left to the architecture document.
+This section describes the domain entities at a conceptual level.
 
 ### 4.1. User
 

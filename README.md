@@ -9,8 +9,7 @@ Contributions, issues, and feedback are welcome.
 
 ## Documentation
 
-- [`SPEC.md`](./SPEC.md) — product specification (what the system does)
-- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — technical architecture and stack decisions
+The [`SPEC.md`](./SPEC.md) file contains the product specification (what the system does).
 
 ## License
 
