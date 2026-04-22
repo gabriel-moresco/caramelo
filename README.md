@@ -6,7 +6,7 @@
     <br />
     <a href="https://caramelo.moresco.cc">Website</a>
     ·
-    <a href="./SPEC.md">Spec</a>
+    <a href="./SPEC.md">SPEC.md</a>
   </p>
 </div>
 
