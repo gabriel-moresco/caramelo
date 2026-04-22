@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path // .tool_response.filePath // empty' | { read -r f; [ -z \"$f\" ] && exit 0; case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs) pnpm lint:file \"$f\" || exit $? ;; esac; pnpm format:file \"$f\"; }",
+            "command": "jq -r '.tool_input.file_path // .tool_response.filePath // empty' | { read -r f; [ -z \"$f\" ] && exit 0; f=$(readlink -f \"$f\" 2>/dev/null || echo \"$f\"); case \"$f\" in *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs) pnpm lint:file \"$f\" || exit $? ;; esac; pnpm format:file \"$f\"; }",
             "statusMessage": "Linting changed file"
           }
         ]
