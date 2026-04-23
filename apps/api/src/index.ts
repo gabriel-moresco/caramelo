@@ -21,9 +21,15 @@ api.use(
   }),
 )
 
-api.use('*', authMiddleware)
-
 api.on(['GET', 'POST'], '/auth/*', c => auth.handler(c.req.raw))
+
+api.get('/health', c =>
+  c.json({
+    status: '🐕 Caramelo API is running!',
+  }),
+)
+
+api.use('/trpc/*', authMiddleware)
 
 api.use(
   '/trpc/*',
@@ -31,12 +37,6 @@ api.use(
     endpoint: '/trpc',
     router: trpcRouter,
     createContext: createTRPCContext,
-  }),
-)
-
-api.get('/health', c =>
-  c.json({
-    status: '🐕 Caramelo API is running!',
   }),
 )
 

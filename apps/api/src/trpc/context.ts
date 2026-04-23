@@ -5,7 +5,6 @@ import type { ApiContext } from '../types'
 export const createTRPCContext = (_opts: unknown, c: HonoContext<ApiContext>) => {
   return {
     user: c.get('user'),
-    session: c.get('session'),
   }
 }
 

@@ -1,17 +1,28 @@
 import { createMiddleware } from 'hono/factory'
+import { HTTPException } from 'hono/http-exception'
 
 import { auth } from '../lib/auth/auth'
 
-export type AuthVariables = {
-  user: typeof auth.$Infer.Session.user | null
-  session: typeof auth.$Infer.Session.session | null
+export type AuthContext = {
+  user: {
+    id: string
+    email: string
+  }
 }
 
-export const authMiddleware = createMiddleware<{ Variables: AuthVariables }>(async (c, next) => {
+export const authMiddleware = createMiddleware<{ Variables: AuthContext }>(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers })
 
-  c.set('user', session?.user ?? null)
-  c.set('session', session?.session ?? null)
+  if (!session) {
+    throw new HTTPException(401, {
+      message: 'Você precisa fazer login para continuar',
+    })
+  }
+
+  c.set('user', {
+    id: session.user.id,
+    email: session.user.email,
+  })
 
   await next()
 })
