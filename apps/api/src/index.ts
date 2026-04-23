@@ -1,13 +1,17 @@
 import { serve } from '@hono/node-server'
+import { trpcServer } from '@hono/trpc-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
-import { authMiddleware, type AuthVariables } from './middlewares/auth-middleware'
-import { authRouter } from './routes/auth'
+import { auth } from './lib/auth/auth'
+import { authMiddleware } from './middlewares/auth-middleware'
+import { createTRPCContext } from './trpc/context'
+import { appRouter } from './trpc/routers/_app'
+import type { ApiContext } from './types'
 
-const app = new Hono<{ Variables: AuthVariables }>()
+const api = new Hono<ApiContext>()
 
-app.use(
+api.use(
   '*',
   cors({
     origin: process.env.VERCEL === '1' ? 'https://caramelo.moresco.cc' : 'http://localhost:3000',
@@ -17,20 +21,29 @@ app.use(
   }),
 )
 
-app.use('*', authMiddleware)
+api.use('*', authMiddleware)
 
-app.route('/auth', authRouter)
+api.on(['GET', 'POST'], '/auth/*', c => auth.handler(c.req.raw))
 
-app.get('/health', c =>
+api.use(
+  '/trpc/*',
+  trpcServer({
+    endpoint: '/trpc',
+    router: appRouter,
+    createContext: createTRPCContext,
+  }),
+)
+
+api.get('/health', c =>
   c.json({
     status: '🐕 Caramelo API is running!',
   }),
 )
 
 if (process.env.NODE_ENV !== 'production') {
-  serve({ fetch: app.fetch, port: 3001 }, info => {
+  serve({ fetch: api.fetch, port: 3001 }, info => {
     console.log(`🐕 Caramelo API is running on http://localhost:${info.port}`)
   })
 }
 
-export default app
+export default api

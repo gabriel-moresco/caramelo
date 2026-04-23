@@ -8,6 +8,8 @@
     "@better-auth/i18n": "^1.6.5",
     "@caramelo/db": "workspace:*",
     "@caramelo/email": "workspace:*",
+    "@hono/trpc-server": "^0.4.2",
+    "@trpc/server": "^11.16.0",
     "better-auth": "^1.6.5",
     "hono": "^4.12.14"
   },

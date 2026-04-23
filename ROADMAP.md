@@ -14,7 +14,7 @@ This document captures **in what order** features land. `SPEC.md` covers what th
 
   Sign-up, email verification, sign-in, password reset, sign-out. Shipped.
 
-- [ ] **0. Prep — tRPC bootstrap**
+- [x] **0. Prep — tRPC bootstrap**
 
   Wire tRPC into the Hono app (`apps/api`) with a `protectedProcedure`, and add the tRPC-React-Query client in `apps/app`. Every step below assumes this is in place.
 

@@ -1,13 +1,9 @@
-import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 import ReactDOM from 'react-dom/client'
 
-import { routeTree } from './routeTree.gen'
+import { createRouter } from './router'
 
-const router = createRouter({
-  routeTree,
-  defaultPreload: 'intent',
-  scrollRestoration: true,
-})
+const router = createRouter()
 
 declare module '@tanstack/react-router' {
   interface Register {
