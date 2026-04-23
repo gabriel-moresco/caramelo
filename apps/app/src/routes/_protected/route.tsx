@@ -13,7 +13,7 @@ export const Route = createFileRoute('/_protected')({
 
     throw redirect({
       to: '/entrar',
-      search: { redirect: location.href },
+      search: location.href === '/' ? {} : { redirect: location.href },
     })
   },
   component: ProtectedLayout,
