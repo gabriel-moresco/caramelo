@@ -1,5 +1,5 @@
 import { router } from '../init'
 
-export const appRouter = router({})
+export const trpcRouter = router({})
 
-export type AppRouter = typeof appRouter
+export type ApiRouter = typeof trpcRouter

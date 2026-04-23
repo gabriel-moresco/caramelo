@@ -1,10 +1,10 @@
-import type { AppRouter } from '@caramelo/api'
+import type { ApiRouter } from '@caramelo/api'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 import { queryClient } from './react-query'
 
-export const trpc = createTRPCOptionsProxy<AppRouter>({
+export const trpc = createTRPCOptionsProxy<ApiRouter>({
   client: createTRPCClient({
     links: [
       httpBatchLink({

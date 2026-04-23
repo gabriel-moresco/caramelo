@@ -6,7 +6,7 @@ import { cors } from 'hono/cors'
 import { auth } from './lib/auth/auth'
 import { authMiddleware } from './middlewares/auth-middleware'
 import { createTRPCContext } from './trpc/context'
-import { appRouter } from './trpc/routers/_app'
+import { trpcRouter } from './trpc/routers/_app'
 import type { ApiContext } from './types'
 
 const api = new Hono<ApiContext>()
@@ -29,7 +29,7 @@ api.use(
   '/trpc/*',
   trpcServer({
     endpoint: '/trpc',
-    router: appRouter,
+    router: trpcRouter,
     createContext: createTRPCContext,
   }),
 )

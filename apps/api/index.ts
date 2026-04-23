@@ -1,1 +1,1 @@
-export type { AppRouter } from './src/trpc/routers/_app'
+export type { ApiRouter } from './src/trpc/routers/_app'

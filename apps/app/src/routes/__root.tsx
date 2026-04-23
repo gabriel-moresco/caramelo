@@ -1,6 +1,6 @@
 import '../styles.css'
 
-import type { AppRouter } from '@caramelo/api'
+import type { ApiRouter } from '@caramelo/api'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import type { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
@@ -11,7 +11,7 @@ import { Analytics } from '@vercel/analytics/react'
 
 type RouterContext = {
   queryClient: QueryClient
-  trpc: TRPCOptionsProxy<AppRouter>
+  trpc: TRPCOptionsProxy<ApiRouter>
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
