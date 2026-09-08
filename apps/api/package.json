@@ -17,7 +17,7 @@
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",
     "@hono/node-server": "^1.19.14",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "tsx": "^4.7.1",
     "typescript": "5.9.3"
   },

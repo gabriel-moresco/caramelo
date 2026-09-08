@@ -16,7 +16,7 @@
     "@caramelo/eslint-config": "workspace:*",
     "@caramelo/typescript-config": "workspace:*",
     "@dotenvx/dotenvx": "^1.61.1",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "drizzle-kit": "^0.31.10",
     "typescript": "5.9.3"
   },
