@@ -4,6 +4,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
+    "customConditions": ["import"],
     "strict": true,
     "skipLibCheck": true,
     "types": ["node"],
