@@ -29,9 +29,3 @@ Specific rules for React components development (applies to `apps/app/**/*.tsx`)
 - When formatting dates and times, always use `dayjs`.
 - Do not edit files inside `apps/apps/**/components/ui/` directly. These are the shadcn/ui shared base components for the app; when a component needs visual adjustments, change the `className` where the component is used instead of modifying the base component file.
 - Route paths must be in Portuguese (e.g., `/criar-conta`, `/entrar`, `/contas/1`, `/cartoes-de-credito`). This applies to all user-facing routes since the app targets Brazilian users.
-
-## Database rules
-
-Specific rules for database development (applies to `packages/db/**`):
-
-- When making changes to Drizzle schema files, do not create migration files. Migrations will be generated manually later.
