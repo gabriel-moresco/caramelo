@@ -1,1 +1,1 @@
-export * from './src/emails'
+export * from './src/emails/index.js'

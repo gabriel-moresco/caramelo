@@ -1,6 +1,6 @@
 import { type CreateEmailResponse, Resend } from 'resend'
 
-import { type RequireAtLeastOne } from './utils'
+import { type RequireAtLeastOne } from './utils.js'
 
 type SendProps = {
   to: string

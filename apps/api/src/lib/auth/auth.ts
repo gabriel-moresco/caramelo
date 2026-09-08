@@ -9,7 +9,7 @@ import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { admin, openAPI } from 'better-auth/plugins'
 
-import { translatedErrorMessages } from './error-translations'
+import { translatedErrorMessages } from './error-translations.js'
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {

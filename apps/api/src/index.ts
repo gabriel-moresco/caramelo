@@ -3,11 +3,11 @@ import { trpcServer } from '@hono/trpc-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
-import { auth } from './lib/auth/auth'
-import { authMiddleware } from './middlewares/auth-middleware'
-import { createTRPCContext } from './trpc/context'
-import { trpcRouter } from './trpc/routers/_app'
-import type { ApiContext } from './types'
+import { auth } from './lib/auth/auth.js'
+import { authMiddleware } from './middlewares/auth-middleware.js'
+import { createTRPCContext } from './trpc/context.js'
+import { trpcRouter } from './trpc/routers/_app.js'
+import type { ApiContext } from './types.js'
 
 const api = new Hono<ApiContext>()
 

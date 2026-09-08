@@ -1,6 +1,6 @@
 import dedent from 'dedent'
 
-import { client } from '../client'
+import { client } from '../client.js'
 
 type SendResetPasswordEmailProps = {
   userEmail: string

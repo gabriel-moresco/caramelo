@@ -1,7 +1,7 @@
 import { createMiddleware } from 'hono/factory'
 import { HTTPException } from 'hono/http-exception'
 
-import { auth } from '../lib/auth/auth'
+import { auth } from '../lib/auth/auth.js'
 
 export type AuthContext = {
   user: {

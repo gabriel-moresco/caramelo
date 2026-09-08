@@ -1,5 +1,7 @@
 {
   "name": "@caramelo/email",
+  "type": "module",
+  "main": "./index.js",
   "scripts": {
     "typecheck": "tsc --noEmit"
   },

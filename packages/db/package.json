@@ -1,5 +1,7 @@
 {
   "name": "@caramelo/db",
+  "type": "module",
+  "main": "./index.js",
   "scripts": {
     "generate": "drizzle-kit generate",
     "drop": "drizzle-kit drop",

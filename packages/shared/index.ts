@@ -1,1 +1,1 @@
-export * from './src/nanoid'
+export * from './src/nanoid.js'

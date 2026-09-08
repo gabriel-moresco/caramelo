@@ -1,4 +1,4 @@
-import { router } from '../init'
+import { router } from '../init.js'
 
 export const trpcRouter = router({})
 
