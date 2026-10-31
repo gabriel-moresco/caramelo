@@ -9,6 +9,8 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import type { TRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { Analytics } from '@vercel/analytics/react'
 
+import { TooltipProvider } from '@/components/ui/tooltip'
+
 type RouterContext = {
   queryClient: QueryClient
   trpc: TRPCOptionsProxy<ApiRouter>
@@ -22,7 +24,9 @@ function RootComponent() {
   return (
     <>
       <HeadContent />
-      <Outlet />
+      <TooltipProvider>
+        <Outlet />
+      </TooltipProvider>
       <Analytics debug={false} />
       <TanStackDevtools
         config={{
