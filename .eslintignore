@@ -7,3 +7,6 @@ pnpm-lock.yaml
 dist
 .vercel
 **/*.gen.ts
+
+# shadcn/ui generated components
+apps/app/src/components/ui
