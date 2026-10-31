@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -13,14 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/client'
 
@@ -97,56 +90,54 @@ export const ResetPassword = ({ token, error }: ResetPasswordProps) => {
           <CardDescription>Escolha uma nova senha para acessar sua conta.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4'>
-              <FormField
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
                 control={form.control}
                 name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nova senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='password'
-                        autoComplete='new-password'
-                        placeholder='••••••••'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='reset-password-password'>Nova senha</FieldLabel>
+                    <Input
+                      {...field}
+                      id='reset-password-password'
+                      type='password'
+                      autoComplete='new-password'
+                      placeholder='••••••••'
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
               />
-              <FormField
+              <Controller
                 control={form.control}
                 name='confirmPassword'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirmar nova senha</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='password'
-                        autoComplete='new-password'
-                        placeholder='••••••••'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='reset-password-confirm-password'>
+                      Confirmar nova senha
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id='reset-password-confirm-password'
+                      type='password'
+                      autoComplete='new-password'
+                      placeholder='••••••••'
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
               />
 
-              {formError && (
-                <p role='alert' className='text-destructive text-xs'>
-                  {formError}
-                </p>
-              )}
+              {formError && <FieldError>{formError}</FieldError>}
 
               <Button type='submit' disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? 'Salvando…' : 'Redefinir senha'}
               </Button>
-            </form>
-          </Form>
+            </FieldGroup>
+          </form>
         </CardContent>
         <CardFooter className='justify-center text-xs'>
           <Link to='/entrar' className='font-medium underline-offset-4 hover:underline'>

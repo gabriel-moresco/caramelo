@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -13,14 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { authClient } from '@/lib/auth/client'
 
@@ -156,33 +149,33 @@ export const SignIn = ({ redirectTo }: SignInProps) => {
           <CardDescription>Acompanhe suas finanças pessoais.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4'>
-              <FormField
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
                 control={form.control}
                 name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>E-mail</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='email'
-                        autoComplete='email'
-                        placeholder='sjobs@apple.com'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor='sign-in-email'>E-mail</FieldLabel>
+                    <Input
+                      {...field}
+                      id='sign-in-email'
+                      type='email'
+                      autoComplete='email'
+                      placeholder='sjobs@apple.com'
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
               />
-              <FormField
+              <Controller
                 control={form.control}
                 name='password'
-                render={({ field }) => (
-                  <FormItem>
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
                     <div className='flex items-center justify-between'>
-                      <FormLabel>Senha</FormLabel>
+                      <FieldLabel htmlFor='sign-in-password'>Senha</FieldLabel>
                       <Link
                         to='/esqueci-senha'
                         className='text-muted-foreground text-xs underline-offset-4 hover:underline'
@@ -190,30 +183,26 @@ export const SignIn = ({ redirectTo }: SignInProps) => {
                         Esqueceu sua senha?
                       </Link>
                     </div>
-                    <FormControl>
-                      <Input
-                        type='password'
-                        autoComplete='current-password'
-                        placeholder='••••••••'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                    <Input
+                      {...field}
+                      id='sign-in-password'
+                      type='password'
+                      autoComplete='current-password'
+                      placeholder='••••••••'
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
               />
 
-              {formError && (
-                <p role='alert' className='text-destructive text-xs'>
-                  {formError}
-                </p>
-              )}
+              {formError && <FieldError>{formError}</FieldError>}
 
               <Button type='submit' disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? 'Entrando…' : 'Entrar'}
               </Button>
-            </form>
-          </Form>
+            </FieldGroup>
+          </form>
         </CardContent>
         <CardFooter className='justify-center text-xs'>
           <span className='text-muted-foreground'>Ainda não tem conta?&nbsp;</span>
